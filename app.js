@@ -107,7 +107,7 @@ app.get('/verify', (req, res) => {
 
 app.get('/signup' , async(req , res)=>{
     try{
-        const user = await User.find()
+        const user = await User.find({refrence:"9050615561"},{_id:0,name:1})
         res.json(user)
 
     }catch(err){
@@ -125,4 +125,3 @@ const port = process.env.PORT || 8001
 app.listen(port , ()=>{
     console.log(`hello from simple server ${port}`)
 })
-
