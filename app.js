@@ -15,6 +15,7 @@ const app = express()
 // import routes 
 const authRoutes = require("./routes/auth")
 const userRoutes = require("./routes/user")
+const { $where } = require('./models/user')
 // const categoryRoutes = require("./routes/category")
 // const subcategoryRoutes = require("./routes/subcategory")
 // const productRoutes = require("./routes/product")
@@ -116,7 +117,19 @@ app.get('/signup' , async(req , res)=>{
     }  
  
  })
+ app.get('/total' , async(req , res)=>{
+    try{
+        const user = await User.find().count()
+        res.json(user)
 
+    }catch(err){
+        res.json({message:err})
+
+    }  
+ 
+ })
+
+ 
 
 
 
