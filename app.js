@@ -106,6 +106,7 @@ app.get('/verify', (req, res) => {
 
 
 
+// refrence users.
 app.get('/signup' , async(req , res)=>{
     try{
         const user = await User.find({refrence:"9050615561"},{_id:0,name:1})
@@ -113,14 +114,26 @@ app.get('/signup' , async(req , res)=>{
 
     }catch(err){
         res.json({message:err})
-
     }  
  
  })
+
+ // total user below.
  app.get('/total' , async(req , res)=>{
     try{
-        const user = await User.find().count()
+        const user = await User.find({ id: { $gte: 2 + 1}}).count()
         res.json(user)
+        
+        if (user < 2) {
+            console.log("opps looks like you hasn't reach 100 users yet ")
+          } else if (user < 3) {
+            console.log("you have 100 rs")
+          }
+          else if (user < 4) {
+            console.log("you have 200 rs")
+          } else {
+            console.log("somthing wrong.")
+          }
 
     }catch(err){
         res.json({message:err})
@@ -129,10 +142,15 @@ app.get('/signup' , async(req , res)=>{
  
  })
 
- 
 
 
 
+
+
+
+
+
+ //port 
 const port = process.env.PORT || 8001
 
 app.listen(port , ()=>{

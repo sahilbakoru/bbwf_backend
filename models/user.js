@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const uuid = require('uuid').v4
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const userSchema = new mongoose.Schema({ 
 
     name:{
@@ -67,6 +68,7 @@ const userSchema = new mongoose.Schema({
 },{timestamps:true})
 
 // virtual field 
+userSchema.plugin(AutoIncrement, {inc_field: 'id'});
 
 userSchema.virtual('password')
 .set(function(password) {
