@@ -4,7 +4,7 @@ const uuid = require('uuid').v4
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const userSchema = new mongoose.Schema({ 
 
-    name:{
+    name :{
         type:String,
         trim:true,
         require:true,
@@ -26,14 +26,17 @@ const userSchema = new mongoose.Schema({
     },
     phone:{
         type:Number,
-        maximum:5,
+        maxlength:10,
         unique:true
     },
     refrence:{
         type:Number,
-        unique:true,
-        maxlenth:10
+        unique:false,
+        maxlenth:10,
+        required:false
     },
+    refralIds:[mongoose.Schema.Types.ObjectId],
+
     adhar:{
         type:Number,
         default:0
@@ -43,11 +46,7 @@ const userSchema = new mongoose.Schema({
         default:0
     },
 
-    hashed_password:{
-        type:String,
-        required:true,
-        
-    },
+   
 
     address:{
         type:String,
@@ -55,15 +54,9 @@ const userSchema = new mongoose.Schema({
     },
 
     salt:String,
-    role:{
-        type:Number,
-        default:0
-    }, 
+  
 
-    history:{
-        type:Array,
-        default:[]
-    }
+    
     
 },{timestamps:true})
 
@@ -73,7 +66,7 @@ userSchema.plugin(AutoIncrement, {inc_field: 'id'});
 userSchema.virtual('password')
 .set(function(password) {
     this._password = password
-    this.salt = uuid()
+    this.salt = uuid() 
     this.hashed_password=this.encryptPassword(password)
 
 })
@@ -104,21 +97,21 @@ userSchema.methods = {
 
 // this code check if phone already exist in database or not
 userSchema.path('phone').validate(async (phone) => {
-const phoneCount = await mongoose.models.User.countDocuments({ phone })
+const phoneCount = await mongoose.models.abcd.countDocuments({ phone })
 return ! phoneCount
 }, 'phone already exists')
 
     // this code check if adharcard already exist in database or not
 userSchema.path('adhar').validate(async (adhar) => {
-    const adharCount = await mongoose.models.User.countDocuments({ adhar })
+    const adharCount = await mongoose.models.abcd.countDocuments({ adhar })
     return ! adharCount
     }, 'Adharcard already exists')
     // this code check if pan already exist in database or not
 userSchema.path('pan').validate(async (pan) => {
-    const panCount = await mongoose.models.User.countDocuments({ pan })
+    const panCount = await mongoose.models.abcd.countDocuments({ pan })
     return ! panCount
     }, 'Pancard already exists')
 
 
 
-module.exports = mongoose.model("User",userSchema);
+module.exports = mongoose.model("abcd",userSchema);

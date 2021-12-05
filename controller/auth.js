@@ -1,7 +1,7 @@
-const User= require('../models/user')
+const User= require('../models/abcd')
 const jwt = require('jsonwebtoken') // to generate signed token 
 const expressjwt = require('express-jwt') // for autrazation check
-const{errorHandler}= require('../helpers/dbErrorHandler')
+// const{errorHandler}= require('../helpers/dbErrorHandler')
 
 // signup control
 exports.signup =(req, res)=> {
@@ -10,11 +10,9 @@ exports.signup =(req, res)=> {
     user.save((error,user)=>{
         if(error){
             return res.status(400).json({
-                error: errorHandler(error)
+                error:(error)
             });
-        }        
-        user.salt= undefined;
-        user.hashed_password= undefined;
+        }       
         res.json({
             user
         })

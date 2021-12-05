@@ -1,4 +1,4 @@
-const user = require('../models/user')
+const user = require('../models/abcd')
 
 exports.userById = (req,res, next,id)=>{
     user.findById(id).exec((err,user)=>{

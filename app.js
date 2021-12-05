@@ -1,4 +1,4 @@
-const User= require('./models/user')
+const User= require('./models/abcd')
 const express = require("express")
 const Router = express.Router()
 const mongoose = require("mongoose")
@@ -15,7 +15,7 @@ const app = express()
 // import routes 
 const authRoutes = require("./routes/auth")
 const userRoutes = require("./routes/user")
-const { $where } = require('./models/user')
+const { $where } = require('./models/abcd')
 // const categoryRoutes = require("./routes/category")
 // const subcategoryRoutes = require("./routes/subcategory")
 // const productRoutes = require("./routes/product")
@@ -28,6 +28,11 @@ mongoose.connect(process.env.DATABASE, {
 //middleware
 //app.use(morgan('dev'))
 app.use(express.json())
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });   
 //app.use(cookieParser())
 app.use(expressvalidator())
 //app.use(cors())
@@ -37,7 +42,7 @@ app.use('/api',userRoutes)
 // app.use('/api',categoryRoutes)
 // app.use('/api',subcategoryRoutes)
 // app.use('/api',productRoutes)
-const client = require('twilio')(config.accountSID, config.authToken)
+const client = require('twilio')(config.accountSID, config.authToken,config.serviceId)
 
 // /login
 //     - phone number
@@ -50,73 +55,51 @@ const client = require('twilio')(config.accountSID, config.authToken)
 
 
 // Login Endpoint
-app.get('/login', (req,res) => {
-     if (req.query.phonenumber) {
-        client
-        .verify
-        .services(config.serviceId)
-        .verifications
-        .create({
-            to: `+${req.query.phonenumber}`,
-            channel: req.query.channel==='call' ? 'call' : 'sms' 
-        })
-        .then(data => {
-            res.status(200).send({
-                message: "Verification is sent!!",
-                phonenumber: req.query.phonenumber,
-                data
-            })
-        }) 
-     } else {
-        res.status(400).send({
-            message: "Wrong phone number :(",
-            phonenumber: req.query.phonenumber,
-            data
-        })
-     }
-})
+app.post(`/send-verification-otp`, (req, res) => {
+    const { phoneInput } = req.body;
+  console.log(req.query, req.body)
+  
+    client.verify
+      .services(config.serviceId)
+      .verifications.create({ to: "+91" + phoneInput, channel: "sms" })
+      .then((verification) => {
+        return res.status(200).json({ verification });
+      })
+      .catch((error) => {
+        return res.status(400).json({ error });
+      });
+  });
 
 // Verify Endpoint
-app.get('/verify', (req, res) => {
-    if (req.query.phonenumber && (req.query.code).length === 4) {
-        client
-            .verify
-            .services(config.serviceId)
-            .verificationChecks
-            .create({
-                to: `+${req.query.phonenumber}`,
-                code: req.query.code
-            })
-            .then(data => {
-                if (data.status === "approved") {
-                    res.status(200).send({
-                        message: "User is Verified!!",
-                        data
-                    })
-                }
-            })
-    } else {
-        res.status(400).send({
-            message: "Wrong phone number or code :(",
-            phonenumber: req.query.phonenumber,
-            data
-        })
-    }
-})
+app.post(`/verify-otp`, (req, res) => {
+    const { phoneInput, code } = req.body;
+    console.log(req.query, req.body)
+    client.verify
+      .services(config.serviceId)
+      .verificationChecks.create({ to: "+91" + phoneInput, code })
+      .then((verification_check) => {
+        return res.status(200).json({ verification_check });
+      })
+      .catch((error) => {
+        return res.status(400).json({ error });
+      });
+  });
 
 
 
 // refrence users.
 app.get('/signup' , async(req , res)=>{
     try{
-        const user = await User.find({refrence:"9050615561"},{_id:0,name:1})
-        res.json(user)
+        const user2 = await User.find({refrence:"545555555"},{_id:0,name:1})
+        res.json(user2)
 
     }catch(err){
         res.json({message:err})
     }  
  
  })
+
+
 
  // total user below.
  app.get('/total' , async(req , res)=>{
