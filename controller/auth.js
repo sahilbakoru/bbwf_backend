@@ -7,17 +7,19 @@ const expressjwt = require('express-jwt') // for autrazation check
 exports.signup =(req, res)=> {
     console.log("req.body", req.body);
     const user = new User(req.body)
-    user.save((error,user)=>{
-        if(error){
+    user.save((err,user)=>{
+        if(err){
             return res.status(400).json({
-                error:(error)
+               
             });
-        }       
+        }        
+        user.salt= undefined;
+        user.hashed_password= undefined;
         res.json({
             user
         })
     })   
-} 
+}  
 
 // signin control 
 exports.signin = (req,res)=>{ 

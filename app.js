@@ -16,6 +16,7 @@ const app = express()
 const authRoutes = require("./routes/auth")
 const userRoutes = require("./routes/user")
 const { $where } = require('./models/abcd')
+const { json } = require('express/lib/response')
 // const categoryRoutes = require("./routes/category")
 // const subcategoryRoutes = require("./routes/subcategory")
 // const productRoutes = require("./routes/product")
@@ -90,7 +91,7 @@ app.post(`/verify-otp`, (req, res) => {
 // refrence users.
 app.get('/signup' , async(req , res)=>{
     try{
-        const user2 = await User.find({refrence:"545555555"},{_id:0,name:1})
+        const user2 = await User.find({refrence:"9050615561"},{_id:0,name:1})
         res.json(user2)
 
     }catch(err){
@@ -98,6 +99,21 @@ app.get('/signup' , async(req , res)=>{
     }  
  
  })
+
+
+ app.get('/allusers' , async(req , res)=>{
+  try{
+      const user = await User.find()
+      res.json(user)
+
+  }catch(err){
+      res.json({message:err})
+  }  
+
+})
+
+
+
 
 
 
@@ -125,6 +141,31 @@ app.get('/signup' , async(req , res)=>{
  
  })
 
+
+
+
+//  total user graph below.
+ app.get('/graph' , async(req , res)=>{
+console.log("test")
+try {
+ const graph_user= User.aggregate( [
+    {
+       $graphLookup: {
+          from: "User",
+          startWith: "$refrence",
+          connectFromField: "refrence",
+          connectToField: "name",
+          as: "Hierarchy"
+       }
+    }
+ ] )
+ console.log("test2")
+ res.send(graph_user)
+} catch (err) {
+  res.json({message:err})
+}
+ 
+})
 
 
 

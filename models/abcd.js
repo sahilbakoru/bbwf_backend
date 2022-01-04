@@ -45,8 +45,12 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:0
     },
+    hashed_password:{
+        type:String,
+        required:true,
+        
+    },
 
-   
 
     address:{
         type:String,
@@ -54,10 +58,7 @@ const userSchema = new mongoose.Schema({
     },
 
     salt:String,
-  
-
-    
-    
+     
 },{timestamps:true})
 
 // virtual field 
@@ -95,22 +96,22 @@ userSchema.methods = {
     }
 }
 
-// this code check if phone already exist in database or not
-userSchema.path('phone').validate(async (phone) => {
-const phoneCount = await mongoose.models.abcd.countDocuments({ phone })
-return ! phoneCount
-}, 'phone already exists')
+// // this code check if phone already exist in database or not
+// userSchema.path('phone').validate(async (phone) => {
+// const phoneCount = await mongoose.models.abcd.countDocuments({ phone })
+// return ! phoneCount
+// }, 'phone already exists')
 
-    // this code check if adharcard already exist in database or not
-userSchema.path('adhar').validate(async (adhar) => {
-    const adharCount = await mongoose.models.abcd.countDocuments({ adhar })
-    return ! adharCount
-    }, 'Adharcard already exists')
-    // this code check if pan already exist in database or not
-userSchema.path('pan').validate(async (pan) => {
-    const panCount = await mongoose.models.abcd.countDocuments({ pan })
-    return ! panCount
-    }, 'Pancard already exists')
+//     // this code check if adharcard already exist in database or not
+// userSchema.path('adhar').validate(async (adhar) => {
+//     const adharCount = await mongoose.models.abcd.countDocuments({ adhar })
+//     return ! adharCount
+//     }, 'Adharcard already exists')
+//     // this code check if pan already exist in database or not
+// userSchema.path('pan').validate(async (pan) => {
+//     const panCount = await mongoose.models.abcd.countDocuments({ pan })
+//     return ! panCount
+//     }, 'Pancard already exists')
 
 
 
