@@ -154,7 +154,7 @@ try {
           from: "User",
           startWith: "$refrence",
           connectFromField: "refrence",
-          connectToField: "name",
+          connectToField: "refrence",
           as: "Hierarchy"
        }
     }
